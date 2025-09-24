@@ -10,7 +10,6 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      {/* <Suspense fallback={<div>⏳ Đang tải...</div>}> */}
       <Suspense fallback={<Loading />}>
         <RoutesView />
       </Suspense>

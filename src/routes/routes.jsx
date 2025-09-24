@@ -1,12 +1,13 @@
-import React from "react";
-import PrivateRoute from "./PrivateRoute"
+import React from "react"
+import { Navigate } from "react-router-dom"
+import MainLayout from "~/layouts/LayoutMain/LayoutMain"
+// import PrivateRoute from "./PrivateRoute"
 
 // Lazy import pages
 const Dashboard = React.lazy(() => import("~/pages/Dashboard/Dashboard"))
-const Home = React.lazy(() => import("~/pages/Home/Home"))
 const About = React.lazy(() => import("~/pages/About/About"))
-const Login = React.lazy(() => import("~/pages/Auth/Login"))
-const NotFound = React.lazy(() => import("~/pages/NotFound"))
+const Login = React.lazy(() => import("~/pages/Auth/Login/Login"))
+const NotFound = React.lazy(() => import("~/pages/NotFound/NotFound"))
 
 const routes = [
     {
@@ -15,24 +16,49 @@ const routes = [
     },
     {
         path: "/dashboard",
-        element: (
-            <PrivateRoute>
-                <Dashboard />
-            </PrivateRoute>
-        ),
+        element: <MainLayout />,
         children: [
-            { path: "profile", element: <Profile /> },
-            { path: "about", element: <About /> },
+            { index: true, element: <Dashboard /> },
         ],
     },
     {
         path: "/",
-        element: <Home />,
+        element: <Navigate to="/dashboard" replace />,
     },
     {
         path: "*",
         element: <NotFound />,
     },
-];
+]
 
-export default routes;
+export default routes
+
+
+// const routes = [
+//     {
+//         path: "/login",
+//         element: <Login />,
+//     },
+//     {
+//         path: "/dashboard",
+//         element: (
+//             <PrivateRoute>
+//                 <Dashboard />
+//             </PrivateRoute>
+//         ),
+//         children: [
+//             { path: "profile", element: <Profile /> },
+//             { path: "about", element: <About /> },
+//         ],
+//     },
+//     {
+//         path: "/",
+//         element: <Home />,
+//     },
+//     {
+//         path: "*",
+//         element: <NotFound />,
+//     },
+// ];
+
+// export default routes;
