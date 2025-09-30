@@ -9,12 +9,12 @@ export default defineConfig({
   resolve: {
     alias: {
       /* eslint-disable no-undef */
-      "~": path.resolve(__dirname, "./src"), // Cấu hình alias cho thư mục src
+      "~": path.resolve(__dirname, "./src"),
     },
   },
   server: {
-    open: true, // Tự động mở trình duyệt khi chạy lệnh `npm run dev`
-    port: 5173, // Cổng mặc định
+    open: true,
+    port: 5173, 
     host: true,
   },
 });

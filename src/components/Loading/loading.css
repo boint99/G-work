@@ -1,72 +1,46 @@
+
 .loader {
-        transform: rotateZ(45deg);
-        perspective: 1000px;
-        border-radius: 50%;
-        width: 48px;
-        height: 48px;
-        color: #fff;
-      }
-        .loader:before,
-        .loader:after {
-          content: '';
-          display: block;
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: inherit;
-          height: inherit;
-          border-radius: 50%;
-          transform: rotateX(70deg);
-          animation: 1s spin linear infinite;
-        }
-        .loader:after {
-          color: #FF3D00;
-          transform: rotateY(70deg);
-          animation-delay: .4s;
-        }
+          position: relative;
+    width: 164px;
+    height: 164px;
+    border-radius: 50%;
+    animation: rotate 1s linear infinite;
+  }
+  .loader::before {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 40px;
+    border: 1px solid #FF3D00;
+    border-width: 12px 2px 7px;
+    border-radius: 2px 2px 1px 1px;
+    box-sizing: border-box;
+    transform: rotate(45deg) translate(24px, -10px);
+    background-image: linear-gradient(#FF3D00 20px, transparent 0),
+    linear-gradient(#FF3D00 30px, transparent 0),
+    linear-gradient(#FF3D00 30px, transparent 0);
+    background-size: 10px 12px , 1px 30px, 1px 30px;
+    background-repeat: no-repeat;
+    background-position: center , 12px 0px , 3px 0px;
+}
+  .loader::after {
+    content: '';
+    position: absolute;
+    height: 4px;
+    width: 4px;
+    left: 20px;
+    top: 47px;
+    border-radius: 50%;
+    color: #Fff;
+    box-shadow: -4px 7px 2px, -7px 16px 3px 1px,
+      -11px 24px 4px 1px, -6px 24px 4px 1px,
+      -14px 35px 6px 2px, -5px 36px 8px 2px,
+      -5px 45px 8px 2px, -14px 49px 8px 2px,
+      6px 60px 11px 1px, -11px 66px 11px 1px,
+      11px 75px 13px, -1px 82px 15px;
+  }
 
-      @keyframes rotate {
-        0% {
-          transform: translate(-50%, -50%) rotateZ(0deg);
-        }
-        100% {
-          transform: translate(-50%, -50%) rotateZ(360deg);
-        }
-      }
+@keyframes rotate {
+  to{transform:rotate(360deg)   }
+}
 
-      @keyframes rotateccw {
-        0% {
-          transform: translate(-50%, -50%) rotate(0deg);
-        }
-        100% {
-          transform: translate(-50%, -50%) rotate(-360deg);
-        }
-      }
-
-      @keyframes spin {
-        0%,
-        100% {
-          box-shadow: .2em 0px 0 0px currentcolor;
-        }
-        12% {
-          box-shadow: .2em .2em 0 0 currentcolor;
-        }
-        25% {
-          box-shadow: 0 .2em 0 0px currentcolor;
-        }
-        37% {
-          box-shadow: -.2em .2em 0 0 currentcolor;
-        }
-        50% {
-          box-shadow: -.2em 0 0 0 currentcolor;
-        }
-        62% {
-          box-shadow: -.2em -.2em 0 0 currentcolor;
-        }
-        75% {
-          box-shadow: 0px -.2em 0 0 currentcolor;
-        }
-        87% {
-          box-shadow: .2em -.2em 0 0 currentcolor;
-        }
-      }

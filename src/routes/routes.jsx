@@ -1,38 +1,36 @@
-import React from "react";
-import PrivateRoute from "./PrivateRoute"
-
+import React from "react"
+import { Navigate } from "react-router-dom"
+// import PrivateRoute from "./PrivateRoute"
+const delayImport = (importFn, ms = 2000) =>
+    new Promise(resolve => {
+      setTimeout(() => resolve(importFn()), ms)
+    })
 // Lazy import pages
-const Dashboard = React.lazy(() => import("~/pages/Dashboard/Dashboard"))
-const Home = React.lazy(() => import("~/pages/Home/Home"))
-const About = React.lazy(() => import("~/pages/About/About"))
-const Login = React.lazy(() => import("~/pages/Auth/Login"))
-const NotFound = React.lazy(() => import("~/pages/NotFound"))
+const FullLayout = React.lazy(() => import('~/layouts/FullLayout/FullLayout'))
+const Dashboard = React.lazy(() => import('~/pages/Dashboard/Dashboard'))
+const Emails = React.lazy(() => import('~/pages/Emails/Email'))
+const Groupmail = React.lazy(() => import('~/pages/GroupMail/GroupMail'))
+const Messages = React.lazy(() => import('~/pages/Messages/Messages'))
+const Login = React.lazy(() => import('~/pages/Auth/Login/Login'))
+const NotFound = React.lazy(() => import('~/pages/NotFound/NotFound'))
 
 const routes = [
     {
-        path: "/login",
-        element: <Login />,
-    },
-    {
-        path: "/dashboard",
-        element: (
-            <PrivateRoute>
-                <Dashboard />
-            </PrivateRoute>
-        ),
-        children: [
-            { path: "profile", element: <Profile /> },
-            { path: "about", element: <About /> },
-        ],
-    },
-    {
-        path: "/",
-        element: <Home />,
-    },
-    {
-        path: "*",
-        element: <NotFound />,
-    },
-];
+      path: "/",
+      element: <FullLayout />,
+      children: [
+        { index: true, element: <Navigate to="dashboard" replace /> },
+        { path: "dashboard", element: <Dashboard /> },  
+        { path: "emails", element: <Emails /> },
+        { path: "groupmails", element: <Groupmail /> },
+        { path: "messages", element: <Messages /> }
 
-export default routes;
+      ],
+    },
+    {
+      path: "*",
+      element: <NotFound />
+    },
+  ]
+  
+  export default routes

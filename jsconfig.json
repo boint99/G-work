@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
-    "baseUrl": ".", // Đảm bảo baseUrl được cấu hình
+    "baseUrl": "src",
     "paths": {
-      "~/*": ["src/*"] // Đặt alias ~ để trỏ đến thư mục src
+      "~/*": ["*"]
     }
-  }
+  },
+  "include": ["src"]
 }
