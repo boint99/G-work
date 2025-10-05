@@ -11,16 +11,34 @@ const Dashboard = React.lazy(() => import('~/pages/Dashboard/Dashboard'))
 const Emails = React.lazy(() => import('~/pages/Emails/Email'))
 const Groupmail = React.lazy(() => import('~/pages/GroupMail/GroupMail'))
 const Messages = React.lazy(() => import('~/pages/Messages/Messages'))
-const Login = React.lazy(() => import('~/pages/Auth/Login/Login'))
 const NotFound = React.lazy(() => import('~/pages/NotFound/NotFound'))
+const Login = React.lazy(() => import('~/pages/auth/Login/Login'))
+const Register = React.lazy(() => import('~/pages/auth/Register/Register'))
+const Auth = React.lazy(() => import('~/pages/auth/'))
 
 const routes = [
+  // {
+  //   path: "/login",
+  //   element: <Auth />
+  // },
+  // {
+  //   path: "/register",
+  //   element: <Auth />
+  // },
+  {
+    path: "/auth",
+    element: <Auth />,   // Auth wrapper
+    children: [
+      { path: "login", element: <Login /> },
+      { path: "register", element: <Register /> }
+    ]
+  },
     {
       path: "/",
       element: <FullLayout />,
       children: [
         { index: true, element: <Navigate to="dashboard" replace /> },
-        { path: "dashboard", element: <Dashboard /> },  
+        { path: "dashboard", element: <Dashboard /> },
         { path: "emails", element: <Emails /> },
         { path: "groupmails", element: <Groupmail /> },
         { path: "messages", element: <Messages /> }
@@ -32,5 +50,5 @@ const routes = [
       element: <NotFound />
     },
   ]
-  
+
   export default routes

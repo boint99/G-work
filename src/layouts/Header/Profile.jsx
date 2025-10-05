@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Link } from 'react-router';
+import { useState } from 'react'
+import { Link } from 'react-router'
 import {
   Avatar,
   Box,
@@ -11,16 +11,16 @@ import {
   ListItemText, Typography
 } from '@mui/material'
 
-import { IconDashboard, IconMail, IconUser } from '@tabler/icons-react'
+import { IconDashboard, IconMail, IconUser, IconMoon } from '@tabler/icons-react'
 
 const Profile = () => {
-  const [anchorEl2, setAnchorEl2] = useState(null);
+  const [anchorEl2, setAnchorEl2] = useState(null)
   const handleClick2 = (event) => {
-    setAnchorEl2(event.currentTarget);
-  };
+    setAnchorEl2(event.currentTarget)
+  }
   const handleClose2 = () => {
     setAnchorEl2(null)
-  };
+  }
 
   return (
     <Box>
@@ -32,8 +32,8 @@ const Profile = () => {
         aria-haspopup="true"
         sx={{
           ...(typeof anchorEl2 === 'object' && {
-            color: 'primary.main',
-          }),
+            color: 'primary.main'
+          })
         }}
         onClick={handleClick2}
       >
@@ -42,13 +42,10 @@ const Profile = () => {
         //   alt={ProfileImg}
           sx={{
             width: 35,
-            height: 35,
+            height: 35
           }}
         />
       </IconButton>
-      {/* ------------------------------------------- */}
-      {/* Message Dropdown */}
-      {/* ------------------------------------------- */}
       <Menu
         id="msgs-menu"
         anchorEl={anchorEl2}
@@ -59,8 +56,8 @@ const Profile = () => {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         sx={{
           '& .MuiMenu-paper': {
-            width: '200px',
-          },
+            width: '200px'
+          }
         }}
       >
         <MenuItem>
@@ -69,7 +66,11 @@ const Profile = () => {
               <ListItemIcon>
                 <IconUser width={20} />
               </ListItemIcon>
-              <ListItemText><Typography variant='subtitle1' color='textPrimary'>My Profile</Typography></ListItemText>
+              <ListItemText>
+                <Typography variant='subtitle1' color='textPrimary'>
+                  My Profile
+                </Typography>
+              </ListItemText>
             </Box>
           </Link>
         </MenuItem>
@@ -100,7 +101,7 @@ const Profile = () => {
         </Box>
       </Menu>
     </Box>
-  );
-};
+  )
+}
 
-export default Profile;
+export default Profile

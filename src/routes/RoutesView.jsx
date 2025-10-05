@@ -8,10 +8,10 @@ export default function RoutesView() {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    setLoading(true)
+    // setLoading(true)
     // Giả lập render xong sau 400ms
-    const timeout = setTimeout(() => setLoading(false), 1000)
-    return () => clearTimeout(timeout)
+    // const timeout = setTimeout(() => setLoading(false), 1000)
+    // return () => clearTimeout(timeout)
   }, [location])
 
   if (loading) return <Loading />

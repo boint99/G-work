@@ -1,7 +1,7 @@
 function Dashboard() {
     return (
         <>
-            Dashboard
+            Tính năng đang phát triển
         </>
     );
 }

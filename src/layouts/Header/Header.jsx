@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
   Box,
   AppBar,
@@ -6,118 +6,68 @@ import {
   styled,
   Stack,
   IconButton,
-  Badge,
-  Button,
-  Menu,
-  MenuItem,
-  Typography,
+  Badge
 } from '@mui/material'
-import PropTypes from 'prop-types'
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
+import { IconBellRinging } from '@tabler/icons-react'
+import { useTheme } from '@mui/material/styles'
 
-// components
 import Profile from './Profile'
-import { IconBellRinging, IconMenu } from '@tabler/icons-react'
+import ModeSelect from './ModeSelect'
 
-const Header = (props) => {
-  const AppBarStyled = styled(AppBar)(({ theme }) => ({
-    boxShadow: 'none',
-    background: theme.palette.background.paper,
-    justifyContent: 'center',
-    backdropFilter: 'blur(4px)',
-    [theme.breakpoints.up('lg')]: {
-      minHeight: '60px',
-    },
-  }))
-  const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
-    width: '100%',
-    color: theme.palette.text.secondary,
-  }))
+const AppBarStyled = styled(AppBar)(({ theme }) => ({
+  boxShadow: 'none',
+  justifyContent: 'center',
+  backdropFilter: 'blur(4px)',
+  backgroundColor: theme.palette.background.paper,
+  transition: 'background-color 0.3s ease',
+  minHeight: '64px'
+}))
 
-  // notification dd
-  const [anchorEl, setAnchorEl] = useState(null)
+const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
+  width: '100%'
+}))
 
-  const [menuPosition, setMenuPosition] = useState(null)
-
-  const handleClick = (event) => {
-    const rect = event.currentTarget.getBoundingClientRect() // Get exact position
-    setMenuPosition({
-      top: rect.bottom + window.scrollY, // Position menu below the icon
-      left: rect.left + window.scrollX, // Align with icon
-    })
-    setAnchorEl(event.currentTarget)
-  }
-
-  const handleClose = () => {
-    setAnchorEl(null)
-  }
+const Header = () => {
+  const theme = useTheme()
 
   return (
     <AppBarStyled position='sticky' color='default'>
-        <ToolbarStyled>
-            <IconButton
-            color='inherit'
-            aria-label='menu'
-            onClick={props.toggleMobileSidebar}
-            sx={{
-                display: {
-                lg: 'none',
-                xs: 'inline',
-                },
-            }}>
-            <IconMenu width='20' height='20' />
-            </IconButton>
-
-            <Box>
-            <IconButton
-                aria-label='show 4 new mails'
-                color='inherit'
-                aria-controls='notification-menu'
-                aria-haspopup='true'
-                onClick={handleClick}>
-                <Badge variant='dot' color='primary'>
-                <IconBellRinging size='21' stroke='1.5' />
-                </Badge>
-            </IconButton>
-
-            <Menu
-                id='notification-menu'
-                anchorEl={anchorEl}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-                anchorReference='anchorPosition' // Use custom positioning
-                anchorPosition={
-                menuPosition
-                    ? { top: menuPosition.top, left: menuPosition.left }
-                    : undefined
-                }
-                slotProps={{
-                paper: {
-                    sx: {
-                    mt: 1, // Ensures the menu appears slightly below the bell icon
-                    boxShadow: 9, // Optional: Improves visibility with a shadow
-                    minWidth: '200px', // Adjust width to ensure proper alignment
-                    },
-                },
-                }}>
-                <MenuItem onClick={handleClose}>
-                <Typography variant='body1'>Item 1</Typography>
-                </MenuItem>
-                <MenuItem onClick={handleClose}>
-                <Typography variant='body1'>Item 2</Typography>
-                </MenuItem>
-            </Menu>
-            </Box>
-            <Box flexGrow={1} />
-            <Stack spacing={1} direction='row' alignItems='center'>
-            <Profile />
-            </Stack>
-        </ToolbarStyled>
+      <ToolbarStyled>
+        <Box
+          sx={{
+            cursor: 'pointer',
+            transition: 'transform 0.3s ease',
+            '&.close': {
+              transform: 'rotate(180deg)'
+            },
+            '&.open': {
+              transform: 'rotate(0deg)'
+            }
+          }}>
+          <ArrowForwardIosIcon />
+        </Box>
+        <Box flexGrow={1} />
+        <ModeSelect />
+        <IconButton
+          aria-label='show notifications'
+          color='inherit'
+          sx={{
+            ':hover': {
+              backgroundColor: theme.palette.action.hover
+            }
+          }}
+        >
+          <Badge variant='dot' color='primary'>
+            <IconBellRinging size='21' stroke='1.5' />
+          </Badge>
+        </IconButton>
+        <Stack spacing={1} direction='row' alignItems='center'>
+          <Profile />
+        </Stack>
+      </ToolbarStyled>
     </AppBarStyled>
-)
-}
-
-Header.propTypes = {
-  sx: PropTypes.object,
+  )
 }
 
 export default Header
