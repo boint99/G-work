@@ -4,27 +4,25 @@ import MenuItem from '@mui/material/MenuItem'
 import FormControl from '@mui/material/FormControl'
 import Select from '@mui/material/Select'
 import Box from '@mui/material/Box'
-import { IconBrightnessUp, IconBrightnessFilled, IconMoonFilled
+import {
+  IconBrightnessUp,
+  IconBrightnessFilled,
+  IconMoonFilled
 } from '@tabler/icons-react'
 
 function ModeSelect() {
   const { mode, setMode } = useColorScheme()
 
-  console.log('Current mode:', mode)
+  if (!mode) {
+    return null
+  }
 
   const handleChange = (event) => {
-    const selectedMode = event.target.value
-    setMode(selectedMode)
+    setMode(event.target.value)
   }
 
   return (
-    <FormControl
-      size="small"
-      sx={{
-        minWidth: 130,
-        mr: 2
-      }}
-    >
+    <FormControl size="small" sx={{ minWidth: 130, mr: 2 }}>
       <InputLabel
         id="label-select-dark-mode"
         sx={{
@@ -39,7 +37,7 @@ function ModeSelect() {
       <Select
         labelId="label-select-dark-mode"
         id="select-dark-mode"
-        value={mode || 'system'}
+        value={mode || 'light'}
         label="Mode"
         onChange={handleChange}
         sx={{
@@ -48,7 +46,8 @@ function ModeSelect() {
             borderColor: 'divider'
           },
           '&:hover .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'primary.main'
+            // borderColor: 'primary.main'
+            borderColor: (theme) => theme.palette.primary.main
           },
           '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
             borderColor: 'primary.main'
@@ -60,19 +59,19 @@ function ModeSelect() {
       >
         <MenuItem value="light">
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <IconBrightnessUp size='21' stroke='1.5' />
+            <IconBrightnessUp size="21" stroke="1.5" />
             Light
           </Box>
         </MenuItem>
         <MenuItem value="dark">
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <IconMoonFilled size='21' stroke='1.5'/>
+            <IconMoonFilled size="21" stroke="1.5" />
             Dark
           </Box>
         </MenuItem>
         <MenuItem value="system">
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <IconBrightnessFilled size='21' stroke='1.5' />
+            <IconBrightnessFilled size="21" stroke="1.5" />
             System
           </Box>
         </MenuItem>

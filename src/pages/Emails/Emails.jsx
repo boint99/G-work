@@ -1,9 +1,9 @@
 function Emails() {
-    return (
-        <>
+  return (
+    <>
             Emails
-        </>
-    );
+    </>
+  )
 }
 
 export default Emails

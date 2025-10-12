@@ -1,54 +1,37 @@
-import React from "react"
-import { Navigate } from "react-router-dom"
-// import PrivateRoute from "./PrivateRoute"
-const delayImport = (importFn, ms = 2000) =>
-    new Promise(resolve => {
-      setTimeout(() => resolve(importFn()), ms)
-    })
-// Lazy import pages
-const FullLayout = React.lazy(() => import('~/layouts/FullLayout/FullLayout'))
-const Dashboard = React.lazy(() => import('~/pages/Dashboard/Dashboard'))
-const Emails = React.lazy(() => import('~/pages/Emails/Email'))
-const Groupmail = React.lazy(() => import('~/pages/GroupMail/GroupMail'))
-const Messages = React.lazy(() => import('~/pages/Messages/Messages'))
-const NotFound = React.lazy(() => import('~/pages/NotFound/NotFound'))
-const Login = React.lazy(() => import('~/pages/auth/Login/Login'))
-const Register = React.lazy(() => import('~/pages/auth/Register/Register'))
-const Auth = React.lazy(() => import('~/pages/auth/'))
+import React, { lazy } from 'react'
+import { Navigate } from 'react-router-dom'
+
+const FullLayout = lazy(() => import('~/layouts/FullLayout/FullLayout'))
+const Dashboard = lazy(() => import('~/pages/Dashboard/Dashboard'))
+const Emails = lazy(() => import('~/pages/Emails/Emails'))
+const GroupMail = lazy(() => import('~/pages/GroupMail/GroupMail'))
+const Messages = lazy(() => import('~/pages/Messages/Messages'))
+const NotFound = lazy(() => import('~/pages/NotFound/NotFound'))
+const Auth = lazy(() => import('~/pages/auth'))
+const Login = lazy(() => import('~/pages/auth/Login/Login'))
+const Register = lazy(() => import('~/pages/auth/Register/Register'))
 
 const routes = [
-  // {
-  //   path: "/login",
-  //   element: <Auth />
-  // },
-  // {
-  //   path: "/register",
-  //   element: <Auth />
-  // },
   {
-    path: "/auth",
-    element: <Auth />,   // Auth wrapper
+    path: '/auth',
+    element: <Auth />,
     children: [
-      { path: "login", element: <Login /> },
-      { path: "register", element: <Register /> }
+      { path: 'login', element: <Login /> },
+      { path: 'register', element: <Register /> }
     ]
   },
-    {
-      path: "/",
-      element: <FullLayout />,
-      children: [
-        { index: true, element: <Navigate to="dashboard" replace /> },
-        { path: "dashboard", element: <Dashboard /> },
-        { path: "emails", element: <Emails /> },
-        { path: "groupmails", element: <Groupmail /> },
-        { path: "messages", element: <Messages /> }
+  {
+    path: '/',
+    element: <FullLayout />,
+    children: [
+      { index: true, element: <Navigate to="dashboard" replace /> },
+      { path: 'dashboard', element: <Dashboard /> },
+      { path: 'emails', element: <Emails /> },
+      { path: 'groupmails', element: <GroupMail /> },
+      { path: 'messages', element: <Messages /> }
+    ]
+  },
+  { path: '*', element: <NotFound /> }
+]
 
-      ],
-    },
-    {
-      path: "*",
-      element: <NotFound />
-    },
-  ]
-
-  export default routes
+export default routes

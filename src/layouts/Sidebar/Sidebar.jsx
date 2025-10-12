@@ -1,96 +1,249 @@
-import * as React from "react"
-import Box from "@mui/material/Box"
-import Drawer from "@mui/material/Drawer"
-import List from "@mui/material/List"
-import ListItem from "@mui/material/ListItem"
-import ListItemButton from "@mui/material/ListItemButton"
-import ListItemIcon from "@mui/material/ListItemIcon"
-import ListItemText from "@mui/material/ListItemText"
-import Gnoc from '~/assets/images/gnoc.jpg'
-import { TfiDashboard } from "react-icons/tfi"
-import { MdOutlineMail } from "react-icons/md"
-import { MdOutlineFormatListBulleted } from "react-icons/md"
-import { BsChatDots } from "react-icons/bs"
-import { useLocation, useNavigate } from "react-router-dom"
-import { alpha } from "@mui/material"
+import React, { useState, useEffect } from 'react'
+import {
+  Box,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Collapse,
+  IconButton,
+  Tooltip,
+  useTheme
+} from '@mui/material'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { MdOutlineMail, MdExpandMore } from 'react-icons/md'
+import { TfiDashboard } from 'react-icons/tfi'
+import { BsChatDots } from 'react-icons/bs'
+import { IconLayoutSidebarRightExpand, IconUserCog, IconCloudCode, IconUsersGroup } from '@tabler/icons-react'
+import Gwork from '~/assets/images/GWork-Logo.png'
 
 
-const menuItems = [
-    { text: "Dashboard", icon: <TfiDashboard style={{fontSize: '23px'}}/>,  path: "/dashboard"},
-    { text: "Email", icon: <MdOutlineMail style={{fontSize: '23px'}}/> , path: "/emails"},
-    { text: "GroupMail", icon: <MdOutlineFormatListBulleted style={{fontSize: '23px'}} />, path: "/groupmails"},
-    { text: "Messages", icon: <BsChatDots style={{fontSize: '23px'}} />, path: '/messages'}
+const menuSections = [
+  {
+    title: 'HOME',
+    items: [
+      { text: 'Dashboard', icon: <TfiDashboard />, path: '/dashboard' }
+    ]
+  },
+  {
+    title: 'WORKS',
+    items: [
+      {
+        text: 'Hosting',
+        icon: <IconCloudCode />,
+        path: '/hosting',
+        isCollapsible: true,
+        subItems: [
+          { text: 'Email', icon: <MdOutlineMail />, path: '/emails' },
+          { text: 'GroupMail', icon: <IconUsersGroup />, path: '/groupmails' }
+        ]
+      },
+      { text: 'Messages', icon: <BsChatDots />, path: '/messages' }
+    ]
+  },
+  {
+    title: 'Management',
+    items: [
+      {
+        text: 'Users',
+        icon: <IconUserCog />,
+        path: '/users'
+      }
+    ]
+  }
 ]
-  
+
 const Sidebar = () => {
-    const drawerWidth = 220
-    const location = useLocation()
-    const navigate = useNavigate()
+  const theme = useTheme()
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  const [expandedItems, setExpandedItems] = useState({})
+  const [open, setOpen] = useState(true)
+
+  // Khi đang ở route con, tự mở menu cha
+  useEffect(() => {
+    menuSections.forEach(section => {
+      section.items.forEach(item => {
+        if (item.isCollapsible && item.subItems) {
+          const isChildActive = item.subItems.some(sub => location.pathname.startsWith(sub.path))
+          if (isChildActive) {
+            setExpandedItems(prev => ({ ...prev, [item.text]: true }))
+          }
+        }
+      })
+    })
+  }, [location])
+
+  const toggleCollapse = (itemText) => {
+    setExpandedItems(prev => ({
+      ...prev,
+      [itemText]: !prev[itemText]
+    }))
+  }
+
+  const isActive = (path) => location.pathname.startsWith(path)
+
+  const MenuItem = ({ item, depth = 0 }) => {
+    const active = isActive(item.path)
+    const isExpanded = expandedItems[item.text]
+
+    const handleClick = () => {
+      if (item.isCollapsible) {
+        toggleCollapse(item.text)
+      } else {
+        navigate(item.path)
+      }
+    }
+
+    const content = (
+      <ListItemButton
+        selected={active}
+        onClick={handleClick}
+        sx={{
+          borderRadius: '8px',
+          minHeight: 44,
+          pl: open ? (depth > 0 ? 4 : 2) : 2,
+          justifyContent: open ? 'initial' : 'center',
+          '&.Mui-selected': {
+            backgroundColor: theme.palette.primary.main
+          },
+          '&:hover': {
+            backgroundColor: theme.palette.action.hover
+          },
+          transition: 'all 0.25s ease'
+        }}
+      >
+        <ListItemIcon
+          sx={{
+            minWidth: 0,
+            mr: open ? 2 : 'auto',
+            color: theme.vars.palette.text.primary,
+            fontSize: '18px',
+            justifyContent: 'center'
+          }}
+        >
+          {item.icon}
+        </ListItemIcon>
+
+        {open && (
+          <ListItemText
+            primary={item.text}
+            sx={{
+              '& .MuiTypography-root': {
+                fontSize: '14px',
+                fontWeight: 500
+              }
+            }}
+          />
+        )}
+
+        {item.isCollapsible && open && (
+          <Box sx={{ ml: 'auto' }}>
+            <MdExpandMore
+              style={{
+                transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                transition: 'transform 0.25s ease'
+              }}
+            />
+          </Box>
+        )}
+      </ListItemButton>
+    )
+
+    return (
+      <Box key={item.text}>
+        <ListItem disablePadding>{open ? content : <Tooltip title={item.text}>{content}</Tooltip>}</ListItem>
+
+        {item.isCollapsible && item.subItems && (
+          <Collapse in={isExpanded} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              {item.subItems.map((sub) => (
+                <MenuItem key={sub.text} item={sub} depth={depth + 1} />
+              ))}
+            </List>
+          </Collapse>
+        )}
+      </Box>
+    )
+  }
 
   return (
     <Drawer
-      variant="permanent" 
+      variant="permanent"
       anchor="left"
       sx={{
-        width: drawerWidth,
+        width: open ? theme.SIDEBARLAYOUT.DRAWERWIDTH : theme.SIDEBARLAYOUT.COLLAPSEDWIDTH,
         flexShrink: 0,
-        "& .MuiDrawer-paper": {
-          width: drawerWidth,
-          boxSizing: "border-box",
-        },
+        padding: '10px',
+        whiteSpace: 'nowrap',
+        border: 'none',
+        '& .MuiDrawer-paper': {
+          width: open ? theme.SIDEBARLAYOUT.DRAWERWIDTH : theme.SIDEBARLAYOUT.COLLAPSEDWIDTH,
+          overflowX: 'hidden',
+          transition: 'width 0.3s ease',
+          bgcolor: theme.vars.palette.background.paper
+        }
       }}
     >
-      <Box sx={{ overflow: "auto" }}>
-        <Box
+      {/* Logo + toggle button */}
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: open ? 'space-between' : 'center',
+          p: 2,
+          height: 64
+        }}
+      >
+        {open && <img src={Gwork} alt="Logo" width={100} />}
+        <IconButton
+          onClick={() => setOpen(!open)}
+          size="small"
           sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center", 
-              height: 60,
+            color: theme.vars.palette.text.primary
           }}
+        >
+          <Box
+            component="span"
+            sx={{
+              display: 'flex',
+              transform: open ? 'rotate(0deg)' : 'rotate(180deg)',
+              transition: 'transform 0.3s ease'
+            }}
           >
-        <img src={Gnoc} alt="Logo_Gnoc" width={120} />
-        </Box>
-        <List sx={{ padding: '20px' }}>
-          {menuItems.map((item) => {
-            const isActive = location.pathname === item.path
-            return (
-              <ListItem
-                key={item.text}
-                disablePadding
+            <IconLayoutSidebarRightExpand size={22} />
+          </Box>
+        </IconButton>
+      </Box>
+
+      <Box sx={{ px: 1 }}>
+        {menuSections.map((section) => (
+          <Box key={section.title} sx={{ mb: 2 }}>
+            {open && (
+              <ListItemText
+                primary={section.title}
                 sx={{
-                  borderRadius: '7px',
-                  mb: 0.5,
-                  minHeight: 44,
+                  pl: 2,
+                  '& .MuiTypography-root': {
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    letterSpacing: '0.5px',
+                    textTransform: 'uppercase',
+                    mb: 1
+                  }
                 }}
-              >
-                <ListItemButton
-                  selected={isActive}
-                  onClick={() => navigate(item.path)}
-                  sx={{
-                    "&.Mui-selected": {
-                      backgroundColor: "#5D87FF !important",
-                      color: "white",
-                      borderRadius: '15px',
-                      "& .MuiListItemIcon-root": {
-                        color: "white"
-                      }
-                    },
-                    "&:hover": {
-                      backgroundColor: isActive
-                      ? "#5D87FF !important" 
-                      : `${alpha("#5D87FF", 0.08)} !important`,
-                      borderRadius: '15px'
-                    }
-                  }}
-                >
-                  <ListItemIcon sx={{ minWidth: '35px' }}>{item.icon}</ListItemIcon>
-                  <ListItemText primary={item.text} />
-                </ListItemButton>
-              </ListItem>
-            )
-          })}
-        </List>
+              />
+            )}
+            <List sx={{ p: 0 }}>
+              {section.items.map((item) => (
+                <MenuItem key={item.text} item={item} />
+              ))}
+            </List>
+          </Box>
+        ))}
       </Box>
     </Drawer>
   )

@@ -38,8 +38,8 @@ const Profile = () => {
         onClick={handleClick2}
       >
         <Avatar
-        //   src={ProfileImg}
-        //   alt={ProfileImg}
+          src='https://binhminhdigital.com/StoreData/PageData/3429/Tim-hieu-ve-ban-quyen-hinh-anh%20(3).jpg'
+          //   alt={ProfileImg}
           sx={{
             width: 35,
             height: 35

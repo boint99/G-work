@@ -1,20 +1,16 @@
-import { BrowserRouter } from 'react-router-dom'
-import React, { Suspense } from 'react'
-import RoutesView from '~/routes/RoutesView'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import routes from '~/routes/routes'
 import Loading from '~/components/Loading/Loading'
 import { CssBaseline, CssVarsProvider } from '@mui/material'
 import theme from '~/theme'
 
-export default function App() {
+const router = createBrowserRouter(routes)
 
+export default function App() {
   return (
-    <BrowserRouter>
-      <Suspense fallback={<Loading />}>
-        <CssVarsProvider theme={theme}>
-          <CssBaseline />
-          <RoutesView />
-        </CssVarsProvider>
-      </Suspense>
-    </BrowserRouter>
+    <CssVarsProvider theme={theme} defaultMode="system">
+      <CssBaseline />
+      <RouterProvider router={router} fallbackElement={<Loading />} />
+    </CssVarsProvider>
   )
 }

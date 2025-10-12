@@ -1,72 +1,67 @@
 import React from 'react'
 import {
   Box,
-  AppBar,
   Toolbar,
-  styled,
   Stack,
   IconButton,
   Badge
 } from '@mui/material'
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 import { IconBellRinging } from '@tabler/icons-react'
-import { useTheme } from '@mui/material/styles'
+import { useTheme, useColorScheme } from '@mui/material/styles'
 
 import Profile from './Profile'
 import ModeSelect from './ModeSelect'
 
-const AppBarStyled = styled(AppBar)(({ theme }) => ({
-  boxShadow: 'none',
-  justifyContent: 'center',
-  backdropFilter: 'blur(4px)',
-  backgroundColor: theme.palette.background.paper,
-  transition: 'background-color 0.3s ease',
-  minHeight: '64px'
-}))
-
-const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
-  width: '100%'
-}))
-
 const Header = () => {
   const theme = useTheme()
+  const { mode } = useColorScheme()
 
   return (
-    <AppBarStyled position='sticky' color='default'>
-      <ToolbarStyled>
-        <Box
-          sx={{
-            cursor: 'pointer',
-            transition: 'transform 0.3s ease',
-            '&.close': {
-              transform: 'rotate(180deg)'
-            },
-            '&.open': {
-              transform: 'rotate(0deg)'
-            }
-          }}>
-          <ArrowForwardIosIcon />
-        </Box>
+    <Box
+      position='sticky'
+      component='header'
+      sx={{
+        boxShadow: 'none',
+        justifyContent: 'center',
+        backdropFilter: 'blur(6px)',
+        transition: 'background-color 0.3s ease, color 0.3s ease',
+        minHeight: 0,
+        bgcolor: theme.vars.palette.background.default,
+        color: theme.palette.text.primary,
+        borderBottom: theme.palette.mode === 'dark'
+          ? `1px solid ${theme.vars.palette.background.paper}`
+          : 'none',
+        width: '100%',
+        zIndex: theme.zIndex.appBar
+      }}
+    >
+      <Toolbar
+        sx={{
+          color: theme.palette.text.primary,
+          width: '100%',
+          transition: 'background-color 0.3s ease, color 0.3s ease',
+          px: 2
+        }}
+      >
         <Box flexGrow={1} />
         <ModeSelect />
         <IconButton
           aria-label='show notifications'
-          color='inherit'
           sx={{
-            ':hover': {
-              backgroundColor: theme.palette.action.hover
-            }
+            color: theme.vars.palette.text.primary,
+            ':hover': { backgroundColor: theme.vars.palette.action.hover }
           }}
         >
           <Badge variant='dot' color='primary'>
             <IconBellRinging size='21' stroke='1.5' />
           </Badge>
         </IconButton>
+
         <Stack spacing={1} direction='row' alignItems='center'>
           <Profile />
         </Stack>
-      </ToolbarStyled>
-    </AppBarStyled>
+      </Toolbar>
+    </Box>
   )
 }
 
