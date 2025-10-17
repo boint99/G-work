@@ -8,16 +8,15 @@ const GroupMail = lazy(() => import('~/pages/GroupMail/GroupMail'))
 const Messages = lazy(() => import('~/pages/Messages/Messages'))
 const NotFound = lazy(() => import('~/pages/NotFound/NotFound'))
 const Auth = lazy(() => import('~/pages/auth'))
-const Login = lazy(() => import('~/pages/auth/Login/Login'))
-const Register = lazy(() => import('~/pages/auth/Register/Register'))
+const IPAddress = lazy(() => import('~/pages/work/IPAddress/IpAddress'))
 
 const routes = [
   {
     path: '/auth',
     element: <Auth />,
     children: [
-      { path: 'login', element: <Login /> },
-      { path: 'register', element: <Register /> }
+      { path: 'login', element: <Auth /> },
+      { path: 'register', element: <Auth /> }
     ]
   },
   {
@@ -28,6 +27,7 @@ const routes = [
       { path: 'dashboard', element: <Dashboard /> },
       { path: 'emails', element: <Emails /> },
       { path: 'groupmails', element: <GroupMail /> },
+      { path: 'ip-address', element: <IPAddress /> },
       { path: 'messages', element: <Messages /> }
     ]
   },

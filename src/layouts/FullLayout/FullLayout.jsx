@@ -1,11 +1,11 @@
 import React, { Suspense, useEffect, useState } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
-import { Box, LinearProgress } from '@mui/material'
+import { Box, Container, LinearProgress } from '@mui/material'
 import AppHeader from '../Header/Header'
 import AppFooter from '../Footer/Footer'
 import Sidebar from '../Sidebar/Sidebar'
 import theme from '~/theme'
-import Loading from '~/components/Loading/Loading' // vẫn giữ để fallback cho lazy import
+import Loading from '~/components/Loading/Loading'
 
 const FullLayout = () => {
   const location = useLocation()
@@ -48,11 +48,14 @@ const FullLayout = () => {
           sx={{
             flexGrow: 1,
             background: theme.palette.background.secondary,
-            transition: 'background-color 0.3s ease, color 0.3s ease'
+            transition: 'background-color 0.3s ease, color 0.3s ease',
+            padding: '0 20px 0 20px'
           }}
         >
           <Suspense fallback={<Loading />}>
-            <Outlet />
+            <Container>
+              <Outlet />
+            </Container>
           </Suspense>
         </Box>
 

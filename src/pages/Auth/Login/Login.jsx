@@ -1,14 +1,20 @@
-// TrungQuanDev: https://youtube.com/@trungquandev
 import { Link, useSearchParams } from 'react-router-dom'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Typography from '@mui/material/Typography'
-import { Card as MuiCard } from '@mui/material'
-import CardActions from '@mui/material/CardActions'
-import TextField from '@mui/material/TextField'
-import Zoom from '@mui/material/Zoom'
-import Alert from '@mui/material/Alert'
+import {
+  Box,
+  Button,
+  Typography,
+  TextField,
+  Card,
+  Alert,
+  Zoom,
+  Checkbox,
+  FormControlLabel,
+  InputAdornment,
+  IconButton
+} from '@mui/material'
 import { useForm } from 'react-hook-form'
+import { IconEye, IconEyeOff, IconLogin2 } from '@tabler/icons-react'
+import { useState } from 'react'
 import {
   EMAIL_RULE,
   EMAIL_RULE_MESSAGE,
@@ -17,113 +23,272 @@ import {
   FIELD_REQUIRED_MESSAGE
 } from '~/utilities/validators'
 
+// Constants
+const THEME_COLORS = {
+  primary: '#1976d2',
+  primaryDark: '#115293',
+  primaryLight: '#42a5f5',
+  accent: '#2196f3'
+}
+
+const CARD_STYLES = {
+  width: 400,
+  p: 4,
+  borderRadius: 4,
+  backdropFilter: 'blur(10px)',
+  background: THEME_COLORS.background,
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center'
+}
+
+const INPUT_STYLES = {
+  '& .MuiOutlinedInput-root': {
+    borderRadius: '25px',
+    // backgroundColor: '#e3f2fd',
+    '&.Mui-focused': {
+      // backgroundColor: '#ffffff'
+    }
+  }
+}
+
+const EMAIL_INPUT_STYLES = {
+  ...INPUT_STYLES,
+  '& .MuiInputLabel-root': {
+    color: '#000'
+  },
+  '& .MuiInputLabel-root.Mui-focused': {
+    // color: THEME_COLORS.primaryDark,
+  },
+  '& .MuiOutlinedInput-root': {
+    ...INPUT_STYLES['& .MuiOutlinedInput-root'],
+    '&.Mui-focused': {
+      backgroundColor: '#ffffff'
+    },
+    // 🎯 Thêm phần này
+    '& input:-webkit-autofill': {
+      WebkitBoxShadow: '0 0 0 100px #ffffff inset',
+      WebkitTextFillColor: '#000',
+      transition: 'background-color 5000s ease-in-out 0s'
+    }
+  }
+}
+
+
+const BUTTON_STYLES = {
+  borderRadius: '25px',
+  fontWeight: 600,
+  textTransform: 'uppercase',
+  background: (theme) =>
+    `linear-gradient(90deg, ${theme.palette.primary.dark} 0%, ${theme.palette.primary.main} 100%)`,
+  '&:hover': {
+    background: (theme) =>
+      `linear-gradient(90deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.dark} 100%)`
+  },
+  color: 'white'
+}
+
+
+// Alert Component
+const AlertMessage = ({ severity, email, message }) => (
+  <Alert
+    severity={severity}
+    sx={{
+      mb: 2,
+      width: '100%',
+      '.MuiAlert-message': { overflow: 'hidden' }
+    }}
+  >
+    {message} <b>{email}</b>
+    {severity === 'success' ? ' has been verified!' : '. Please verify!'}
+  </Alert>
+)
+
+// Password Toggle Button Component
+const PasswordToggle = ({ showPassword, onToggle }) => (
+  <InputAdornment position="end">
+    <IconButton
+      onClick={onToggle}
+      edge="end"
+      aria-label="toggle password visibility"
+      sx={{ color: '#000' }}
+    >
+      {showPassword ? <IconEyeOff /> : <IconEye />}
+    </IconButton>
+  </InputAdornment>
+)
+
 function Login() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm()
 
-  const { register, handleSubmit, formState: { errors } } = useForm()
-  let [searchParams] = useSearchParams()
-  const registeredEmail = searchParams.get('veryfiedEmail')
-  const verifiedEmail = searchParams.get('veryfiedEmail')
+  const [searchParams] = useSearchParams()
+  const verifiedEmail = searchParams.get('verifiedEmail')
+  const registeredEmail = searchParams.get('registeredEmail')
 
+  const [showPassword, setShowPassword] = useState(false)
+
+  const handleTogglePassword = () => {
+    setShowPassword((prev) => !prev)
+  }
 
   const onSubmit = (data) => {
-    //
+    console.log('Form submitted:', data)
+    // TODO: Implement login logic
   }
 
   return (
-    <Box sx={{ height: '500px' }}>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Zoom in={true} style={{ transitionDelay: '300ms' }}>
-          <MuiCard sx={{ minWidth: 380, maxWidth: 380, marginTop: '6em' }}>
-            <Box sx={{
-              margin: '1em',
-              display: 'flex',
-              justifyContent: 'center',
-              gap: 1
-            }}>
-              {/* <Avatar sx={{ bgcolor: 'primary.main' }}><LockIcon /></Avatar>
-            <Avatar sx={{ bgcolor: 'primary.main' }}><TrelloIcon /></Avatar> */}
-            </Box>
-            <Box component='h2' sx={{ marginTop: '1em', display: 'flex', justifyContent: 'center', color: theme => theme.palette.grey[500] }}>
+    <Box
+      sx={{
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative'
+      }}
+    >
+      <Zoom in={true} style={{ transitionDelay: '300ms', position: 'absolute', top: '10%' }}>
+        <Card elevation={6} sx={CARD_STYLES}>
+          <Typography
+            variant="h5"
+            sx={{
+              mb: 3,
+              fontWeight: 600,
+              textTransform: 'uppercase',
+              color: THEME_COLORS.primaryDark
+            }}
+          >
             Login
-            </Box>
-            <Box sx={{ marginTop: '1em', display: 'flex', justifyContent: 'center', flexDirection: 'column', padding: '0 1em' }}>
-              {verifiedEmail &&
-            <Alert severity="success" sx={{ '.MuiAlert-message': { overflow: 'hidden' } }}>
-              Your email&nbsp;
-              <Typography variant="span" sx={{ fontWeight: 'bold', '&:hover': { color: '#fdba26' } }}>{verifiedEmail}</Typography>
-              &nbsp;has been verified.<br />Now you can login to enjoy our services! Have a good day!
-            </Alert>
-              }
-              {registeredEmail &&
-            <Alert severity="info" sx={{ '.MuiAlert-message': { overflow: 'hidden' } }}>
-              An email has been sent to&nbsp;
-              <Typography variant="span" sx={{ fontWeight: 'bold', '&:hover': { color: '#fdba26' } }}>{registeredEmail}</Typography>
-              <br />Please check and verify your account before logging in!
-            </Alert>
-              }
-            </Box>
-            <Box sx={{ padding: '0 1em 1em 1em' }}>
-              <Box sx={{ marginTop: '1em' }}>
-                <TextField
-                // autoComplete="nope"
-                  autoFocus
-                  fullWidth
-                  label="Enter Email..."
-                  type="text"
-                  variant="outlined"
-                  error={!!errors['email']}
-                  {...register('email', {
-                    required: FIELD_REQUIRED_MESSAGE,
-                    pattern: {
-                      value: EMAIL_RULE,
-                      message: EMAIL_RULE_MESSAGE
-                    }
-                  })}
-                />
-                {/* <FieldErrorAlert errors={errors} fieldName={'email'} /> */}
-              </Box>
-              <Box sx={{ marginTop: '1em' }}>
-                <TextField
-                  fullWidth
-                  label="Enter Password..."
-                  type="password"
-                  variant="outlined"
-                  error={!!errors['password']}
-                  {...register('password', {
-                    required: FIELD_REQUIRED_MESSAGE,
-                    pattern: {
-                      value: PASSWORD_RULE,
-                      message: PASSWORD_RULE_MESSAGE
-                    }
-                  })}
-                />
-                {/* <FieldErrorAlert errors={errors} fieldName={'password'} /> */}
-              </Box>
-            </Box>
-            <CardActions sx={{ padding: '0 1em 1em 1em' }}>
-              <Button
-                className='interceptor-loading'
-                type="submit"
-                variant="contained"
-                color="primary"
-                size="large"
-                fullWidth
+          </Typography>
+
+          {/* Alerts */}
+          {verifiedEmail && (
+            <AlertMessage
+              severity="success"
+              email={verifiedEmail}
+              message="Your email"
+            />
+          )}
+          {registeredEmail && (
+            <AlertMessage
+              severity="info"
+              email={registeredEmail}
+              message="An email has been sent to"
+            />
+          )}
+
+          {/* Login Form */}
+          <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ width: '100%' }}>
+            {/* Email Field */}
+            <TextField
+              fullWidth
+              label="Nhập email"
+              variant="outlined"
+              margin="normal"
+              placeholder="example@gmail.com"
+              error={!!errors.email}f
+              helperText={errors.email?.message}
+              {...register('email', {
+                required: FIELD_REQUIRED_MESSAGE,
+                pattern: {
+                  value: EMAIL_RULE,
+                  message: EMAIL_RULE_MESSAGE
+                }
+              })}
+              sx={EMAIL_INPUT_STYLES}
+            />
+
+            {/* Password Field */}
+            <TextField
+              fullWidth
+              label="Nhập password"
+              type={showPassword ? 'text' : 'password'}
+              variant="outlined"
+              margin="normal"
+              placeholder="password"
+              error={!!errors.password}
+              helperText={errors.password?.message}
+              {...register('password', {
+                required: FIELD_REQUIRED_MESSAGE,
+                pattern: {
+                  value: PASSWORD_RULE,
+                  message: PASSWORD_RULE_MESSAGE
+                }
+              })}
+              sx={EMAIL_INPUT_STYLES}
+              InputProps={{
+                endAdornment: (
+                  <PasswordToggle
+                    showPassword={showPassword}
+                    onToggle={handleTogglePassword}
+                  />
+                )
+              }}
+            />
+
+            {/* Remember & Forgot Password */}
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                mt: 1
+              }}
+            >
+              <FormControlLabel
+                control={<Checkbox size="small" {...register('remember')} sx={{ color: 'black' }} />}
+                label="Remember me"
+              />
+              <Link
+                to="/auth/forgot-password"
+                style={{
+                  fontSize: '0.875rem',
+                  color: THEME_COLORS.primary,
+                  textDecoration: 'none',
+                  fontWeight: 500
+                }}
               >
-              Login
-              </Button>
-            </CardActions>
-            <Box sx={{ padding: '0 1em 1em 1em', textAlign: 'center' }}>
-              <Typography>Author - Nguyentieuboidev</Typography>
-              <Link to="/auth/register" style={{ textDecoration: 'none' }}>
-                <Typography sx={{ color: 'primary.main', '&:hover': { color: '#ffbb39' } }}>Create account!</Typography>
+                Forgot password?
               </Link>
             </Box>
-          </MuiCard>
-        </Zoom>
-      </form>
+
+            {/* Submit Button */}
+            <Button
+              type="submit"
+              fullWidth
+              size="large"
+              variant="contained"
+              startIcon={<IconLogin2 />}
+              sx={{ ...BUTTON_STYLES, mt: 2 }}
+            >
+              Login
+            </Button>
+          </Box>
+
+          {/* Register Link */}
+          <Box sx={{ textAlign: 'center', mt: 3 }}>
+            <Typography variant="body2">
+                Don&apos;t have an account?
+              <Link
+                to="/auth/register"
+                style={{
+                  color: THEME_COLORS.primary,
+                  fontWeight: 'bold',
+                  textDecoration: 'none',
+                  marginLeft: 2
+                }}
+              >
+                Create account
+              </Link>
+            </Typography>
+          </Box>
+        </Card>
+      </Zoom>
     </Box>
   )
 }
 
 export default Login
-

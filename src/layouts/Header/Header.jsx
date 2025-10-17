@@ -14,7 +14,6 @@ import ModeSelect from './ModeSelect'
 
 const Header = () => {
   const theme = useTheme()
-  const { mode } = useColorScheme()
 
   return (
     <Box

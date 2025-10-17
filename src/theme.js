@@ -1,8 +1,7 @@
 import { extendTheme } from '@mui/material/styles'
-import typography from '~/utilities/Typography'
+const FamilyFont = '"Roboto", "Helvetica", "Arial", sans-serif'
 
 const theme = extendTheme({
-  // defaultColorScheme: 'dark',
   colorSchemeSelector: 'class',
   colorSchemes: {
     light: {
@@ -10,7 +9,8 @@ const theme = extendTheme({
         mode: 'light',
         background: {
           default: '#ffffff',
-          paper: '#ffffff'
+          paper: '#ffffff',
+          pageHeader: '#EBF3FE'
         },
         text: {
           primary: '#000000',
@@ -28,6 +28,10 @@ const theme = extendTheme({
           dark: '#23afdb',
           contrastText: '#ffffff'
         },
+        action: {
+          hover: 'rgba(83, 155, 255, 0.08)',
+          active: 'rgba(83, 155, 255, 0.12)'
+        },
         success: {
           main: '#13DEB9',
           light: '#E6FFFA',
@@ -51,10 +55,6 @@ const theme = extendTheme({
           light: '#FEF5E5',
           dark: '#ae8e59',
           contrastText: '#ffffff'
-        },
-        action: {
-          hover: 'rgba(83, 155, 255, 0.08)',
-          active: 'rgba(83, 155, 255, 0.12)'
         }
       }
     },
@@ -63,7 +63,8 @@ const theme = extendTheme({
         mode: 'dark',
         background: {
           default: '#212121',
-          paper: '#181818'
+          paper: '#181818',
+          pageHeader: '#181818'
         },
         text: {
           primary: '#ffffff',
@@ -81,6 +82,10 @@ const theme = extendTheme({
           dark: '#23afdb',
           contrastText: '#ffffff'
         },
+        action: {
+          hover: 'rgba(83, 155, 255, 0.12)',
+          active: 'rgba(83, 155, 255, 0.16)'
+        },
         success: {
           main: '#13DEB9',
           light: '#E6FFFA',
@@ -104,10 +109,6 @@ const theme = extendTheme({
           light: '#FEF5E5',
           dark: '#ae8e59',
           contrastText: '#ffffff'
-        },
-        action: {
-          hover: 'rgba(83, 155, 255, 0.12)',
-          active: 'rgba(83, 155, 255, 0.16)'
         }
       }
     }
@@ -128,7 +129,6 @@ const theme = extendTheme({
       700: '#dfe5ef'
     }
   },
-  typography,
   components: {
     MuiListItemText: {
       styleOverrides: {
@@ -141,7 +141,72 @@ const theme = extendTheme({
       styleOverrides: {
         body: {
           transition: 'background-color 0.3s ease, color 0.3s ease'
+        },
+        a: {
+          // color: '#000000',
+          textDecoration: 'none',
+          fontSize: '0.875rem',
+          fontWeight: 400,
+          '&:hover': {
+            textDecoration: 'none'
+          }
         }
+      }
+    },
+    Typography: {
+      fontFamily: FamilyFont,
+      h1: {
+        fontWeight: 600,
+        fontSize: '2.25rem',
+        lineHeight: '2.75rem'
+      },
+      h2: {
+        fontWeight: 600,
+        fontSize: '1.875rem',
+        lineHeight: '2.25rem'
+      },
+      h3: {
+        fontWeight: 600,
+        fontSize: '1.5rem',
+        lineHeight: '1.75rem'
+      },
+      h4: {
+        fontWeight: 600,
+        fontSize: '1.3125rem',
+        lineHeight: '1.6rem'
+      },
+      h5: {
+        fontWeight: 600,
+        fontSize: '1.125rem',
+        lineHeight: '1.6rem'
+      },
+      h6: {
+        fontWeight: 600,
+        fontSize: '1rem',
+        lineHeight: '1.2rem'
+      },
+      button: {
+        textTransform: 'capitalize',
+        fontWeight: 400
+      },
+      body1: {
+        fontSize: '0.875rem',
+        fontWeight: 400,
+        lineHeight: '1.334rem'
+      },
+      body2: {
+        fontSize: '0.75rem',
+        letterSpacing: '0rem',
+        fontWeight: 400,
+        lineHeight: '1rem'
+      },
+      subtitle1: {
+        fontSize: '0.875rem',
+        fontWeight: 400
+      },
+      subtitle2: {
+        fontSize: '0.875rem',
+        fontWeight: 400
       }
     }
   },

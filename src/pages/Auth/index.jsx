@@ -1,26 +1,26 @@
 import { useLocation, Navigate, Outlet } from 'react-router-dom'
 import Box from '@mui/material/Box'
-import Register from './Register/register'
+import Register from './register/Register'
 import Login from './Login/Login'
 
 function Auth() {
   const location = useLocation()
-  const isLogin = location.pathname === 'auth/login'
-  const isRegister = location.pathname === 'auth/register'
+  const isLogin = location.pathname === '/auth/login'
+  const isRegister = location.pathname === '/auth/register'
 
+  if (location.pathname === '/auth') {
+    return <Navigate to="/auth/login" replace />
+  }
   return (
     <Box sx={{
       display: 'flex',
       flexDirection: 'column',
       minHeight: '100vh',
       alignItems: 'center',
-      justifyContent: 'flex-start',
-      background: 'url("src/assets/auth/login-register-bg.jpg") no-repeat center/cover',
-      boxShadow: 'inset 0 0 0 2000px rgba(0, 0, 0, 0.2)'
+      justifyContent: 'flex-start'
     }}>
       {isLogin && <Login />}
       {isRegister && <Register />}
-      <Outlet />
     </Box>
   )
 }

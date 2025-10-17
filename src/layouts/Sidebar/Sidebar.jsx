@@ -16,7 +16,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { MdOutlineMail, MdExpandMore } from 'react-icons/md'
 import { TfiDashboard } from 'react-icons/tfi'
 import { BsChatDots } from 'react-icons/bs'
-import { IconLayoutSidebarRightExpand, IconUserCog, IconCloudCode, IconUsersGroup } from '@tabler/icons-react'
+import { IconLayoutSidebarRightExpand, IconUserCog, IconCloudCode, IconUsersGroup, IconWifi } from '@tabler/icons-react'
 import Gwork from '~/assets/images/GWork-Logo.png'
 
 
@@ -30,6 +30,7 @@ const menuSections = [
   {
     title: 'WORKS',
     items: [
+      { text: 'Internet Protocol', icon: <IconWifi />, path: '/ip-address' },
       {
         text: 'Hosting',
         icon: <IconCloudCode />,
@@ -63,7 +64,6 @@ const Sidebar = () => {
   const [expandedItems, setExpandedItems] = useState({})
   const [open, setOpen] = useState(true)
 
-  // Khi đang ở route con, tự mở menu cha
   useEffect(() => {
     menuSections.forEach(section => {
       section.items.forEach(item => {
