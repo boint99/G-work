@@ -8,14 +8,12 @@ import {
   Card,
   Alert,
   Zoom,
-  Checkbox,
-  FormControlLabel,
   InputAdornment,
   IconButton
 } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import { IconEye, IconEyeOff, IconLogin2 } from '@tabler/icons-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   EMAIL_RULE,
   EMAIL_RULE_MESSAGE,
@@ -23,6 +21,8 @@ import {
   PASSWORD_RULE_MESSAGE,
   FIELD_REQUIRED_MESSAGE
 } from '~/utilities/validators'
+import { toast } from 'react-toastify'
+import { registerAPI } from '~/api/apiClient'
 
 // Constants
 const THEME_COLORS = {
@@ -121,6 +121,9 @@ function Register() {
   const {
     register,
     handleSubmit,
+    setFocus,
+    reset,
+    watch,
     formState: { errors }
   } = useForm()
 
@@ -129,14 +132,32 @@ function Register() {
   const registeredEmail = searchParams.get('registeredEmail')
 
   const [showPassword, setShowPassword] = useState(false)
-
+  const password = watch('password')
   const handleTogglePassword = () => {
     setShowPassword((prev) => !prev)
   }
 
+  useEffect(() => {
+    setFocus('email')
+  }, [setFocus])
+
   const onSubmit = (data) => {
-    console.log('Form submitted:', data)
-    // TODO: Implement login logic
+    const { ...payload } = data
+    delete payload.confirmPassword
+
+    registerAPI(payload)
+      .then((res) => {
+        if (res.status === 201) {
+          toast.success(res?.message, { position: 'top-center' })
+          reset()
+        }
+        else {
+          toast.error(res?.message || 'Đăng ký thất bại', { position: 'top-center' })
+        }
+      })
+      .catch((error) => {
+        toast.error(error.response.data.message, { position: 'top-center' })
+      })
   }
 
   return (
@@ -182,6 +203,19 @@ function Register() {
           {/* Login Form */}
           <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ width: '100%' }}>
             {/* Email Field */}
+            <TextField
+              fullWidth
+              label="Full Name"
+              variant="outlined"
+              margin="normal"
+              placeholder="Nguyen Van A"
+              error={!!errors.fullName}
+              helperText={errors.fullName?.message}
+              {...register('fullName', {
+                required: FIELD_REQUIRED_MESSAGE
+              })}
+              sx={EMAIL_INPUT_STYLES}
+            />
             <TextField
               fullWidth
               label="Email"
@@ -233,16 +267,14 @@ function Register() {
               type={showPassword ? 'text' : 'password'}
               variant="outlined"
               margin="normal"
-              placeholder="password"
-              error={!!errors.password}
-              helperText={errors.password?.message}
-              {...register('password', {
-                required: FIELD_REQUIRED_MESSAGE,
-                pattern: {
-                  value: PASSWORD_RULE,
-                  message: PASSWORD_RULE_MESSAGE
-                }
+              placeholder="Confirm password"
+              {...register('confirmPassword', {
+                required: 'Please re-enter password',
+                validate: (value) =>
+                  value === password || 'Re-enter password does not match'
               })}
+              error={!!errors.confirmPassword}
+              helperText={errors.confirmPassword?.message}
               sx={EMAIL_INPUT_STYLES}
               InputProps={{
                 endAdornment: (

@@ -14,7 +14,7 @@ import {
 } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import { IconEye, IconEyeOff, IconLogin2 } from '@tabler/icons-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   EMAIL_RULE,
   EMAIL_RULE_MESSAGE,
@@ -122,6 +122,7 @@ function Login() {
   const {
     register,
     handleSubmit,
+    setFocus,
     formState: { errors }
   } = useForm()
 
@@ -134,6 +135,10 @@ function Login() {
   const handleTogglePassword = () => {
     setShowPassword((prev) => !prev)
   }
+
+  useEffect(() => {
+    setFocus('email')
+  }, [setFocus])
 
   const onSubmit = (data) => {
     console.log('Form submitted:', data)
