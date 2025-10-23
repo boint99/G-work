@@ -293,7 +293,7 @@ function Register() {
               variant="contained"
               sx={{ ...BUTTON_STYLES, mt: 2 }}
             >
-             Register
+              Register
             </Button>
           </Box>
         </Card>

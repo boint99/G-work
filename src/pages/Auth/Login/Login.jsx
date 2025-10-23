@@ -1,4 +1,4 @@
-import { Link, useSearchParams } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import {
   Box,
   Button,
@@ -22,8 +22,10 @@ import {
   PASSWORD_RULE_MESSAGE,
   FIELD_REQUIRED_MESSAGE
 } from '~/utilities/validators'
+import { loginAPI } from '~/api/apiClient'
+import { toast } from 'react-toastify'
 
-// Constants
+
 const THEME_COLORS = {
   primary: '#1976d2',
   primaryDark: '#115293',
@@ -123,6 +125,7 @@ function Login() {
     register,
     handleSubmit,
     setFocus,
+    reset,
     formState: { errors }
   } = useForm()
 
@@ -131,6 +134,7 @@ function Login() {
   const registeredEmail = searchParams.get('registeredEmail')
 
   const [showPassword, setShowPassword] = useState(false)
+  const navigate = useNavigate()
 
   const handleTogglePassword = () => {
     setShowPassword((prev) => !prev)
@@ -140,9 +144,43 @@ function Login() {
     setFocus('email')
   }, [setFocus])
 
-  const onSubmit = (data) => {
-    console.log('Form submitted:', data)
-    // TODO: Implement login logic
+  const onSubmit = async (data) => {
+    const { ...payload } = data
+    delete payload.remember
+
+    try {
+      await toast.promise(
+        loginAPI(payload).then((res) => {
+          if (res.status === 200 || res.status === 201) {
+            const { token, user } = res.result
+            localStorage.setItem('token', token)
+            localStorage.setItem('user', JSON.stringify(user))
+            navigate('/dashboard')
+            return res.message ?? 'Login successfully'
+          } else {
+            throw new Error(res.message ?? 'Login failed')
+          }
+        }),
+        {
+          pending: 'Đang đăng nhập...',
+          success: {
+            render({ data }) {
+              return data
+            },
+            position: 'top-center'
+          },
+          error: {
+            render({ data }) {
+              return data?.message || 'Đăng nhập thất bại!'
+            },
+            position: 'top-center'
+          }
+        }
+      )
+    } catch (error) {
+      toast.error(error.response.data.message, { position: 'top-center' })
+    }
+
   }
 
   return (
@@ -194,7 +232,7 @@ function Login() {
               variant="outlined"
               margin="normal"
               placeholder="example@gmail.com"
-              error={!!errors.email}f
+              error={!!errors.email} f
               helperText={errors.email?.message}
               {...register('email', {
                 required: FIELD_REQUIRED_MESSAGE,
@@ -276,7 +314,7 @@ function Login() {
           {/* Register Link */}
           <Box sx={{ textAlign: 'center', mt: 3 }}>
             <Typography variant="body2">
-                Don&apos;t have an account?
+              Don&apos;t have an account?
               <Link
                 to="/auth/register"
                 style={{
