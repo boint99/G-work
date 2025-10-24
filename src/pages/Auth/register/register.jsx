@@ -1,5 +1,5 @@
 
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import {
   Box,
   Button,
@@ -133,6 +133,7 @@ function Register() {
 
   const [showPassword, setShowPassword] = useState(false)
   const password = watch('password')
+  const navigate = useNavigate()
   const handleTogglePassword = () => {
     setShowPassword((prev) => !prev)
   }
@@ -141,23 +142,30 @@ function Register() {
     setFocus('email')
   }, [setFocus])
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     const { ...payload } = data
     delete payload.confirmPassword
-
-    registerAPI(payload)
-      .then((res) => {
-        if (res.status === 201) {
-          toast.success(res?.message, { position: 'top-center' })
-          reset()
+    try {
+      await toast.promise(
+        (async () => {
+          const res = await registerAPI(payload)
+          if (res.status === 200 || res.status === 201) {
+            navigate('/auth/login')
+            return res.message
+          } else {
+            throw new Error(res.message ?? 'Đăng ký thất bại!')
+          }
+        })(),
+        {
+          pending: 'Đang tạo tài khoản...',
+          success: { render: ({ data }) => data, position: 'top-center' },
+          error: { render: ({ data }) => data?.message || 'Tạo tài khoản thất bại!', position: 'top-center' }
         }
-        else {
-          toast.error(res?.message || 'Đăng ký thất bại', { position: 'top-center' })
-        }
-      })
-      .catch((error) => {
-        toast.error(error.response.data.message, { position: 'top-center' })
-      })
+      )
+    } catch (error) {
+      const message = error?.response?.data?.message || error.message
+      toast.error(message, { position: 'top-center' })
+    }
   }
 
   return (
