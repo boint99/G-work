@@ -148,40 +148,48 @@ function Login() {
     const { ...payload } = data
     delete payload.remember
 
-    try {
-      await toast.promise(
-        loginAPI(payload).then((res) => {
-          if (res.status === 200 || res.status === 201) {
-            const { token, user } = res.result
+    await toast.promise(
+      (async () => {
+        try {
+          const res = await loginAPI(payload)
+          const status = res?.status
+          const message = res?.data?.message || res?.message || 'Login successfully'
+          const result = res?.result || res?.data?.result || res?.data
+
+          if (status === 200 || status === 201) {
+            const { token, user } = result
             localStorage.setItem('token', token)
             localStorage.setItem('user', JSON.stringify(user))
             navigate('/dashboard')
-            return res.message ?? 'Login successfully'
+            return message
           } else {
-            throw new Error(res.message ?? 'Login failed')
+            throw new Error(message)
           }
-        }),
-        {
-          pending: 'Đang đăng nhập...',
-          success: {
-            render({ data }) {
-              return data
-            },
-            position: 'top-center'
-          },
-          error: {
-            render({ data }) {
-              return data?.message || 'Đăng nhập thất bại!'
-            },
-            position: 'top-center'
-          }
+        } catch (error) {
+        // Bắt lỗi HTTP của axios (401, 404, 500,...)
+          const status = error?.response?.status
+          const message =
+          error?.response?.data?.message ||
+          (status === 401
+            ? 'Email hoặc mật khẩu không đúng!'
+            : 'Đăng nhập thất bại!')
+          throw new Error(message)
         }
-      )
-    } catch (error) {
-      toast.error(error.response.data.message, { position: 'top-center' })
-    }
-
+      })(),
+      {
+        pending: 'Đang đăng nhập...',
+        success: {
+          render: ({ data }) => data,
+          position: 'top-center'
+        },
+        error: {
+          render: ({ data }) => data?.message || data || 'Đăng nhập thất bại!',
+          position: 'top-center'
+        }
+      }
+    )
   }
+
 
   return (
     <Box
@@ -232,7 +240,7 @@ function Login() {
               variant="outlined"
               margin="normal"
               placeholder="example@gmail.com"
-              error={!!errors.email} f
+              error={!!errors.email}
               helperText={errors.email?.message}
               {...register('email', {
                 required: FIELD_REQUIRED_MESSAGE,

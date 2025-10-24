@@ -50,7 +50,7 @@ const menuSections = [
       {
         text: 'Users',
         icon: <IconUserCog />,
-        path: '/users'
+        path: '/management/users'
       }
     ]
   }
